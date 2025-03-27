@@ -57,7 +57,7 @@ def load_feedback(topic):
 
 # ▶️ 학생 화면
 def student_view():
-    query_params = st.experimental_get_query_params()
+    query_params = st.query_params()
     topic = query_params.get("topic", [""])[0]
 
     if not topic:
