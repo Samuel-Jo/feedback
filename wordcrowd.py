@@ -112,14 +112,26 @@ def teacher_view():
         df = load_feedback(topic)
         count = len(df)
         st.markdown(f"### 📌 주제: {topic} ({count}건 제출됨)")
-
+    
         if df.empty:
             st.write("❗ 아직 피드백이 없습니다.")
         else:
             df = df.sort_values(by="timestamp", ascending=True)
+    
+            # ✅ 주제별 피드백 다운로드 버튼
+            csv = df.to_csv(index=False).encode("utf-8-sig")
+            st.download_button(
+                label="⬇️ CSV 다운로드",
+                data=csv,
+                file_name=f"feedback_{topic}.csv",
+                mime="text/csv"
+            )
+    
             for idx, row in df.iterrows():
                 st.markdown(f"**[{row['timestamp']}]** {row['feedback']}")
+    
         st.markdown("---")
+
 
 # 🧠 실행 진입점
 def main():
