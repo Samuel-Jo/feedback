@@ -8,9 +8,17 @@ from streamlit_autorefresh import st_autorefresh
 
 TOPICS_FILE = "topics.txt"
 
-# ✅ Streamlit Cloud 배포 주소를 고정
+# ✅ Cloud 주소 고정
 def get_base_url():
-    return "https://feedback-nppwjkm3csgjpf3peanwvq.streamlit.app"  # ← 여기에 본인 앱 주소 넣기
+    return "https://feedback-nppwjkm3csgjpf3peanwvq.streamlit.app"  # ← 본인 주소로 변경
+
+# ✅ 외부에서 초기화 신호 처리
+def reset_all_data():
+    if os.path.exists(TOPICS_FILE):
+        os.remove(TOPICS_FILE)
+    for f in os.listdir():
+        if f.startswith("feedback_") and f.endswith(".csv"):
+            os.remove(f)
 
 def get_feedback_file(topic):
     return f"feedback_{topic}.csv"
@@ -86,7 +94,7 @@ def teacher_view():
         st.info("아직 주제가 없습니다.")
         return
 
-    # ✅ QR 코드: Cloud 주소 고정
+    # QR 코드 생성
     st.sidebar.subheader("📸 주제별 QR 코드")
     base_url = get_base_url()
 
@@ -99,7 +107,7 @@ def teacher_view():
         st.sidebar.image(buffered.getvalue(), caption=student_url, use_column_width=True)
         st.sidebar.markdown("---")
 
-    # ✅ 주제별 피드백 출력
+    # 피드백 출력
     for topic in topics:
         df = load_feedback(topic)
         count = len(df)
@@ -113,9 +121,16 @@ def teacher_view():
                 st.markdown(f"**[{row['timestamp']}]** {row['feedback']}")
         st.markdown("---")
 
-# ✅ 실행 시작점
+# 🧠 실행 진입점
 def main():
     query_params = st.experimental_get_query_params()
+
+    # ✅ 외부에서 초기화 요청 시
+    if query_params.get("reset", ["false"])[0].lower() == "true":
+        reset_all_data()
+        st.success("✅ 모든 데이터가 초기화되었습니다.")
+        st.stop()
+
     mode = query_params.get("mode", ["teacher"])[0]
 
     if mode == "student":
