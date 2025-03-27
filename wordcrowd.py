@@ -2,31 +2,15 @@ import streamlit as st
 import pandas as pd
 import qrcode
 from io import BytesIO
-import socket
 import os
 from datetime import datetime
 from streamlit_autorefresh import st_autorefresh
 
 TOPICS_FILE = "topics.txt"
 
-# IP 주소 감지
-def get_local_ip():
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    try:
-        s.connect(("8.8.8.8", 80))
-        ip = s.getsockname()[0]
-    except:
-        ip = "127.0.0.1"
-    finally:
-        s.close()
-    return ip
-
-# ✅ Cloud 환경이면 Cloud URL 반환, 아니면 로컬 IP
+# ✅ Cloud 고정 주소 반환 (Streamlit Cloud용으로 강제 고정)
 def get_base_url():
-    if "streamlit.app" in os.environ.get("STREAMLIT_SERVER_URL", ""):
-        return os.environ["STREAMLIT_SERVER_URL"]
-    else:
-        return f"http://{get_local_ip()}:8501"
+    return "https://samuel-jo-feedback.streamlit.app"  # 자신의 앱 주소로 바꿔도 됨
 
 def get_feedback_file(topic):
     return f"feedback_{topic}.csv"
