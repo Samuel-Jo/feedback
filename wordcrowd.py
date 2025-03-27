@@ -8,9 +8,9 @@ from streamlit_autorefresh import st_autorefresh
 
 TOPICS_FILE = "topics.txt"
 
-# ✅ Cloud 고정 주소 반환 (Streamlit Cloud용으로 강제 고정)
+# ✅ Streamlit Cloud 배포 주소를 고정
 def get_base_url():
-    return "https://samuel-jo-feedback.streamlit.app"  # 자신의 앱 주소로 바꿔도 됨
+    return "https://feedback-nppwjkm3csgjpf3peanwvq.streamlit.app"  # ← 여기에 본인 앱 주소 넣기
 
 def get_feedback_file(topic):
     return f"feedback_{topic}.csv"
@@ -86,6 +86,7 @@ def teacher_view():
         st.info("아직 주제가 없습니다.")
         return
 
+    # ✅ QR 코드: Cloud 주소 고정
     st.sidebar.subheader("📸 주제별 QR 코드")
     base_url = get_base_url()
 
@@ -98,6 +99,7 @@ def teacher_view():
         st.sidebar.image(buffered.getvalue(), caption=student_url, use_column_width=True)
         st.sidebar.markdown("---")
 
+    # ✅ 주제별 피드백 출력
     for topic in topics:
         df = load_feedback(topic)
         count = len(df)
@@ -111,6 +113,7 @@ def teacher_view():
                 st.markdown(f"**[{row['timestamp']}]** {row['feedback']}")
         st.markdown("---")
 
+# ✅ 실행 시작점
 def main():
     query_params = st.experimental_get_query_params()
     mode = query_params.get("mode", ["teacher"])[0]
