@@ -9,7 +9,7 @@ from streamlit_autorefresh import st_autorefresh
 
 TOPICS_FILE = "topics.txt"
 
-# 내부 IP 가져오기
+# IP 주소 감지
 def get_local_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
@@ -21,18 +21,22 @@ def get_local_ip():
         s.close()
     return ip
 
-# 피드백 파일 경로
+# ✅ Cloud 환경이면 Cloud URL 반환, 아니면 로컬 IP
+def get_base_url():
+    if "streamlit.app" in os.environ.get("STREAMLIT_SERVER_URL", ""):
+        return os.environ["STREAMLIT_SERVER_URL"]
+    else:
+        return f"http://{get_local_ip()}:8501"
+
 def get_feedback_file(topic):
     return f"feedback_{topic}.csv"
 
-# 주제 목록 불러오기
 def load_topics():
     if os.path.exists(TOPICS_FILE):
         with open(TOPICS_FILE, 'r', encoding='utf-8') as f:
             return [line.strip() for line in f.readlines()]
     return []
 
-# 주제 추가
 def add_topic(topic):
     topics = load_topics()
     if topic and topic not in topics:
@@ -41,7 +45,6 @@ def add_topic(topic):
             for t in topics:
                 f.write(f"{t}\n")
 
-# 피드백 저장
 def save_feedback(topic, feedback):
     filename = get_feedback_file(topic)
     df = pd.DataFrame({
@@ -53,7 +56,6 @@ def save_feedback(topic, feedback):
         df = pd.concat([existing, df], ignore_index=True)
     df.to_csv(filename, index=False)
 
-# 피드백 로딩
 def load_feedback(topic):
     filename = get_feedback_file(topic)
     if os.path.exists(filename):
@@ -61,7 +63,7 @@ def load_feedback(topic):
     else:
         return pd.DataFrame(columns=["timestamp", "feedback"])
 
-# 학생 화면
+# ▶️ 학생 화면
 def student_view():
     query_params = st.experimental_get_query_params()
     topic = query_params.get("topic", [""])[0]
@@ -82,7 +84,7 @@ def student_view():
             else:
                 st.error("50자 이내로 작성해주세요.")
 
-# 강사 화면
+# 👨‍🏫 강사 화면
 def teacher_view():
     st.title("📋 주제별 피드백 보기")
     st_autorefresh(interval=5000, key="refresh")
@@ -100,13 +102,11 @@ def teacher_view():
         st.info("아직 주제가 없습니다.")
         return
 
-    local_ip = get_local_ip()
-
     st.sidebar.subheader("📸 주제별 QR 코드")
+    base_url = get_base_url()
 
-    # 주제별 QR 생성
     for topic in topics:
-        student_url = f"http://{local_ip}:8501/?mode=student&topic={topic}"
+        student_url = f"{base_url}/?mode=student&topic={topic}"
         qr = qrcode.make(student_url)
         buffered = BytesIO()
         qr.save(buffered, format="PNG")
@@ -114,7 +114,6 @@ def teacher_view():
         st.sidebar.image(buffered.getvalue(), caption=student_url, use_column_width=True)
         st.sidebar.markdown("---")
 
-    # 본문에 주제별 피드백 출력
     for topic in topics:
         df = load_feedback(topic)
         count = len(df)
