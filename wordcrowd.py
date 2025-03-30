@@ -3,22 +3,44 @@ import pandas as pd
 import qrcode
 from io import BytesIO
 import os
+import base64
 from datetime import datetime
 from streamlit_autorefresh import st_autorefresh
 
 TOPICS_FILE = "topics.txt"
 
-# ✅ Cloud 주소 고정
+# ✅ Cloud 고정 주소
 def get_base_url():
-    return "https://feedback-nppwjkm3csgjpf3peanwvq.streamlit.app"  # ← 본인 주소로 변경
+    return "https://feedback-nppwjkm3csgjpf3peanwvq.streamlit.app"
 
-# ✅ 외부에서 초기화 신호 처리
+# ✅ 외부 초기화 처리
 def reset_all_data():
     if os.path.exists(TOPICS_FILE):
         os.remove(TOPICS_FILE)
     for f in os.listdir():
         if f.startswith("feedback_") and f.endswith(".csv"):
             os.remove(f)
+
+# ✅ 사용자 폰트 적용 함수
+def get_font_style():
+    with open("a코코넛.ttf", "rb") as f:
+        font_data = f.read()
+        encoded = base64.b64encode(font_data).decode()
+    return f"""
+    <style>
+    @font-face {{
+        font-family: "MyFont";
+        src: url(data:font/ttf;base64,{encoded}) format('truetype');
+    }}
+    html, body, [class*="css"] {{
+        font-family: "MyFont", sans-serif;
+        font-size: 20px !important;
+    }}
+    h1, h2, h3 {{
+        font-size: 24px !important;
+    }}
+    </style>
+    """
 
 def get_feedback_file(topic):
     return f"feedback_{topic}.csv"
@@ -57,13 +79,14 @@ def load_feedback(topic):
 
 # ▶️ 학생 화면
 def student_view():
-    query_params = st.experimental_get_query_params()
-    topic = query_params.get("topic", [""])[0]
+    query_params = st.query_params
+    topic = query_params.get("topic", "")
 
     if not topic:
         st.error("❗ URL에 주제 정보가 없습니다.")
         return
 
+    st.markdown(get_font_style(), unsafe_allow_html=True)
     st.title(f"📥 [{topic}] 피드백 제출")
 
     with st.form("feedback_form"):
@@ -78,6 +101,7 @@ def student_view():
 
 # 👨‍🏫 강사 화면
 def teacher_view():
+    st.markdown(get_font_style(), unsafe_allow_html=True)
     st.title("📋 주제별 피드백 보기")
     st_autorefresh(interval=5000, key="refresh")
 
@@ -94,9 +118,8 @@ def teacher_view():
         st.info("아직 주제가 없습니다.")
         return
 
-    # QR 코드 생성
-    st.sidebar.subheader("📸 주제별 QR 코드")
     base_url = get_base_url()
+    st.sidebar.subheader("📸 주제별 QR 코드")
 
     for topic in topics:
         student_url = f"{base_url}/?mode=student&topic={topic}"
@@ -104,21 +127,20 @@ def teacher_view():
         buffered = BytesIO()
         qr.save(buffered, format="PNG")
         st.sidebar.markdown(f"**📌 {topic}**")
-        st.sidebar.image(buffered.getvalue(), caption=student_url, use_column_width=True)
+        st.sidebar.image(buffered.getvalue(), caption=student_url, use_container_width=True)
         st.sidebar.markdown("---")
 
-    # 피드백 출력
     for topic in topics:
         df = load_feedback(topic)
         count = len(df)
         st.markdown(f"### 📌 주제: {topic} ({count}건 제출됨)")
-    
+
         if df.empty:
             st.write("❗ 아직 피드백이 없습니다.")
         else:
             df = df.sort_values(by="timestamp", ascending=True)
-    
-            # ✅ 주제별 피드백 다운로드 버튼
+
+            # ✅ CSV 다운로드 버튼
             csv = df.to_csv(index=False).encode("utf-8-sig")
             st.download_button(
                 label="⬇️ CSV 다운로드",
@@ -126,24 +148,23 @@ def teacher_view():
                 file_name=f"feedback_{topic}.csv",
                 mime="text/csv"
             )
-    
-            for idx, row in df.iterrows():
+
+            for _, row in df.iterrows():
                 st.markdown(f"**[{row['timestamp']}]** {row['feedback']}")
-    
+
         st.markdown("---")
 
-
-# 🧠 실행 진입점
+# 🔁 진입점
 def main():
-    query_params = st.experimental_get_query_params()
+    query_params = st.query_params
 
-    # ✅ 외부에서 초기화 요청 시
-    if query_params.get("reset", ["false"])[0].lower() == "true":
+    # ✅ reset trigger
+    if query_params.get("reset", "") == "true":
         reset_all_data()
         st.success("✅ 모든 데이터가 초기화되었습니다.")
         st.stop()
 
-    mode = query_params.get("mode", ["teacher"])[0]
+    mode = query_params.get("mode", "teacher")
 
     if mode == "student":
         student_view()
