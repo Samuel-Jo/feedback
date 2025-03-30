@@ -63,7 +63,6 @@ def save_feedback(topic, feedback):
         existing = pd.read_csv(filename)
         df = pd.concat([existing, df], ignore_index=True)
     df.to_csv(filename, index=False)
-    # st.info(f"✅ 저장 완료: {filename}")  # 확인용 로그 출력 (학생 화면에서 제거)
 
 def load_feedback(topic):
     filename = get_feedback_file(topic)
@@ -93,11 +92,19 @@ def student_view():
             if feedback and len(feedback) <= 50:
                 save_feedback(topic, feedback)
                 st.success("제출되었습니다!")
-                # st.info(f"📦 DEBUG: topic={topic}, feedback={feedback}")  # 학생 화면에서 숨김
             else:
                 st.error("50자 이내로 작성해주세요.")
 
 def get_sentiment_class(text):
+    text = text.lower()
+    positive_words = ["좋아요", "감사", "훌륭", "유익", "재밌", "최고", "기뻐", "즐겁", "행복", "유쾌", "만족", "좋은", "재미있"]
+    negative_words = ["지루", "별로", "짜증", "싫어", "어려워", "불편", "불만", "지침", "힘들", "부족", "불쾌", "아쉬"]
+
+    if any(word in text for word in positive_words):
+        return "feedback-card-positive"
+    elif any(word in text for word in negative_words):
+        return "feedback-card-negative"
+
     blob = TextBlob(text)
     polarity = blob.sentiment.polarity
     if polarity > 0.1:
