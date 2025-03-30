@@ -120,8 +120,12 @@ def teacher_view():
         if st.button("주제 추가"):
             if new_topic.strip():
                 add_topic(new_topic.strip())
-                st.success(f"'{new_topic}' 주제가 추가되었습니다.")
-                st.experimental_rerun()
+                st.session_state["just_added"] = True
+                st.rerun()
+
+        if st.session_state.get("just_added"):
+            st.success("✅ 주제가 추가되었습니다!")
+            del st.session_state["just_added"]
 
     topics = load_topics()
     if not topics:
