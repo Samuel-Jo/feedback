@@ -24,7 +24,7 @@ def apply_custom_css():
     with open("style.css") as f:
         css += f.read()
 
-    with open("a\ucf54\ucf54\ub110.ttf", "rb") as font_file:
+    with open("akokonut.ttf", "rb") as font_file:
         font_encoded = base64.b64encode(font_file.read()).decode()
         css += f"""
         @font-face {{
