@@ -63,6 +63,7 @@ def save_feedback(topic, feedback):
         existing = pd.read_csv(filename)
         df = pd.concat([existing, df], ignore_index=True)
     df.to_csv(filename, index=False)
+    st.info(f"✅ 저장 완료: {filename}")  # 확인용 로그 출력
 
 def load_feedback(topic):
     filename = get_feedback_file(topic)
@@ -80,7 +81,6 @@ def student_view():
         st.error("❗ URL에 주제 정보가 없습니다.")
         return
 
-    # 모바일 대응 줄바꿈용 span 태그 포함
     st.markdown(
         f'<h1 class="section-title">📥 <span class="mobile-wrap">[{topic}]<br>피드백 제출</span></h1>',
         unsafe_allow_html=True
@@ -93,6 +93,7 @@ def student_view():
             if feedback and len(feedback) <= 50:
                 save_feedback(topic, feedback)
                 st.success("제출되었습니다!")
+                st.info(f"📦 DEBUG: topic={topic}, feedback={feedback}")
             else:
                 st.error("50자 이내로 작성해주세요.")
 
