@@ -24,7 +24,7 @@ def apply_custom_css():
     with open("style.css") as f:
         css += f.read()
 
-    with open("a코코넛.ttf", "rb") as font_file:
+    with open("a\ucf54\ucf54\ub110.ttf", "rb") as font_file:
         font_encoded = base64.b64encode(font_file.read()).decode()
         css += f"""
         @font-face {{
@@ -80,7 +80,7 @@ def student_view():
         return
 
     st.markdown(
-        f'<h1 style="font-size: 30px; font-family: MyFont;">📥 [{topic}] 피드백 제출</h1>',
+        f'<h1 class="section-title">📥 [{topic}] 피드백 제출</h1>',
         unsafe_allow_html=True
     )
 
@@ -98,15 +98,16 @@ def teacher_view():
     apply_custom_css()
     st_autorefresh(interval=5000, key="refresh")
 
-    st.markdown('<h1 style="font-size: 30px; font-family: MyFont;">📋 주제별 피드백 보기</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="section-title">📋 주제별 피드백 보기</h1>', unsafe_allow_html=True)
 
-    st.sidebar.subheader("📝 새 주제 추가")
-    new_topic = st.sidebar.text_input("새 주제를 입력하세요")
-    if st.sidebar.button("주제 추가"):
-        if new_topic.strip():
-            add_topic(new_topic.strip())
-            st.success(f"'{new_topic}' 주제가 추가되었습니다.")
-            st.experimental_rerun()
+    with st.sidebar:
+        st.markdown("<div class='sidebar-section'><h2>📝 새 주제 추가</h2></div>", unsafe_allow_html=True)
+        new_topic = st.text_input("새 주제를 입력하세요")
+        if st.button("주제 추가"):
+            if new_topic.strip():
+                add_topic(new_topic.strip())
+                st.success(f"'{new_topic}' 주제가 추가되었습니다.")
+                st.experimental_rerun()
 
     topics = load_topics()
     if not topics:
@@ -114,33 +115,31 @@ def teacher_view():
         return
 
     base_url = get_base_url()
-    st.sidebar.subheader("📸 주제별 QR 코드")
-
-    for topic in topics:
-        student_url = f"{base_url}/?mode=student&topic={topic}"
-        qr = qrcode.make(student_url)
-        buffered = BytesIO()
-        qr.save(buffered, format="PNG")
-        st.sidebar.markdown(f"**📌 {topic}**")
-        st.sidebar.image(buffered.getvalue(), caption=student_url, use_container_width=True)
-        st.sidebar.markdown("---")
+    with st.sidebar:
+        st.markdown("<h2 class='sidebar-section'>📸 주제별 QR 코드</h2>", unsafe_allow_html=True)
+        for topic in topics:
+            student_url = f"{base_url}/?mode=student&topic={topic}"
+            qr = qrcode.make(student_url)
+            buffered = BytesIO()
+            qr.save(buffered, format="PNG")
+            st.markdown(f"**📌 {topic}**")
+            st.image(buffered.getvalue(), caption=student_url, use_container_width=True)
+            st.markdown("<hr>", unsafe_allow_html=True)
 
     for topic in topics:
         df = load_feedback(topic)
         count = len(df)
 
-        # ✅ 제목 (30px)
         st.markdown(
-            f'<h2 style="font-size: 30px; font-family: MyFont;">📌 주제: {topic} ({count}건 제출됨)</h2>',
+            f'<h2 class="topic-header">📌 주제: {topic} ({count}건 제출됨)</h2>',
             unsafe_allow_html=True
         )
 
         if df.empty:
-            st.write("❗ 아직 피드백이 없습니다.")
+            st.info("❗ 아직 피드백이 없습니다.")
         else:
             df = df.sort_values(by="timestamp", ascending=True)
 
-            # ⬇️ CSV 다운로드 버튼
             csv = df.to_csv(index=False).encode("utf-8-sig")
             st.download_button(
                 label="⬇️ CSV 다운로드",
@@ -150,16 +149,14 @@ def teacher_view():
             )
 
             for _, row in df.iterrows():
-                # ✅ 본문 (30px)
                 st.markdown(
-                    f'<p style="font-size: 30px; font-family: MyFont;">[{row["timestamp"]}] {row["feedback"]}</p>',
+                    f'<p class="feedback-entry">[{row["timestamp"]}] {row["feedback"]}</p>',
                     unsafe_allow_html=True
                 )
-        st.markdown("---")
+        st.markdown("<hr>", unsafe_allow_html=True)
 
 def main():
     query_params = st.query_params
-
     if query_params.get("reset", "") == "true":
         reset_all_data()
         st.success("✅ 모든 데이터가 초기화되었습니다.")
