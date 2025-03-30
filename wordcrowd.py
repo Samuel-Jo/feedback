@@ -7,6 +7,7 @@ import base64
 from datetime import datetime
 from streamlit_autorefresh import st_autorefresh
 from textblob import TextBlob
+from sentiment_words import positive_words, negative_words
 
 TOPICS_FILE = "topics.txt"
 
@@ -97,9 +98,6 @@ def student_view():
 
 def get_sentiment_class(text):
     text = text.lower()
-    positive_words = ["좋아요", "감사", "훌륭", "유익", "재밌", "최고", "기뻐", "즐겁", "행복", "유쾌", "만족", "좋은", "재미있"]
-    negative_words = ["지루", "별로", "짜증", "싫어", "어려워", "불편", "불만", "지침", "힘들", "부족", "불쾌", "아쉬"]
-
     if any(word in text for word in positive_words):
         return "feedback-card-positive"
     elif any(word in text for word in negative_words):
