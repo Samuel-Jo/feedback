@@ -1,4 +1,28 @@
-feedback/
-├── wordcrowd.py         ← 본 코드
-├── requirements.txt
-└── a코코넛.ttf          ← 업로드한 글꼴
+/* style.css */
+
+html, body, [class*="css"] {
+    font-family: "MyFont", sans-serif;
+    font-size: 30px !important;  /* 본문 글자 크기 */
+    color: #333;
+}
+
+h1, h2, h3 {
+    font-size: 40px !important;  /* 제목 글자 크기 */
+    font-weight: bold;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+button {
+    font-size: 28px;
+    padding: 12px 20px;
+    background-color: #007ACC;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #005fa3;
+}
