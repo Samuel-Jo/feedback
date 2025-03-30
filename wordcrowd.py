@@ -9,11 +9,9 @@ from streamlit_autorefresh import st_autorefresh
 
 TOPICS_FILE = "topics.txt"
 
-# ✅ Cloud 고정 주소
 def get_base_url():
     return "https://feedback-nppwjkm3csgjpf3peanwvq.streamlit.app"
 
-# ✅ 외부 초기화 처리
 def reset_all_data():
     if os.path.exists(TOPICS_FILE):
         os.remove(TOPICS_FILE)
@@ -21,26 +19,21 @@ def reset_all_data():
         if f.startswith("feedback_") and f.endswith(".csv"):
             os.remove(f)
 
-# ✅ 사용자 폰트 적용 함수
-def get_font_style():
-    with open("a코코넛.ttf", "rb") as f:
-        font_data = f.read()
-        encoded = base64.b64encode(font_data).decode()
-    return f"""
-    <style>
-    @font-face {{
-        font-family: "MyFont";
-        src: url(data:font/ttf;base64,{encoded}) format('truetype');
-    }}
-    html, body, [class*="css"] {{
-        font-family: "MyFont", sans-serif;
-        font-size: 20px !important;
-    }}
-    h1, h2, h3 {{
-        font-size: 24px !important;
-    }}
-    </style>
-    """
+def apply_custom_css():
+    css = ""
+    with open("style.css") as f:
+        css += f.read()
+
+    with open("a코코넛.ttf", "rb") as font_file:
+        font_encoded = base64.b64encode(font_file.read()).decode()
+        css += f"""
+        @font-face {{
+            font-family: "MyFont";
+            src: url(data:font/ttf;base64,{font_encoded}) format("truetype");
+        }}
+        """
+
+    st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
 def get_feedback_file(topic):
     return f"feedback_{topic}.csv"
@@ -77,8 +70,8 @@ def load_feedback(topic):
     else:
         return pd.DataFrame(columns=["timestamp", "feedback"])
 
-# ▶️ 학생 화면
 def student_view():
+    apply_custom_css()
     query_params = st.query_params
     topic = query_params.get("topic", "")
 
@@ -86,8 +79,10 @@ def student_view():
         st.error("❗ URL에 주제 정보가 없습니다.")
         return
 
-    st.markdown(get_font_style(), unsafe_allow_html=True)
-    st.title(f"📥 [{topic}] 피드백 제출")
+    st.markdown(
+        f'<h1 style="font-size: 40px; font-family: MyFont;">📥 [{topic}] 피드백 제출</h1>',
+        unsafe_allow_html=True
+    )
 
     with st.form("feedback_form"):
         feedback = st.text_input("50자 이내로 피드백을 입력해주세요")
@@ -99,11 +94,11 @@ def student_view():
             else:
                 st.error("50자 이내로 작성해주세요.")
 
-# 👨‍🏫 강사 화면
 def teacher_view():
-    st.markdown(get_font_style(), unsafe_allow_html=True)
-    st.title("📋 주제별 피드백 보기")
+    apply_custom_css()
     st_autorefresh(interval=5000, key="refresh")
+
+    st.markdown('<h1 style="font-size: 40px; font-family: MyFont;">📋 주제별 피드백 보기</h1>', unsafe_allow_html=True)
 
     st.sidebar.subheader("📝 새 주제 추가")
     new_topic = st.sidebar.text_input("새 주제를 입력하세요")
@@ -133,14 +128,19 @@ def teacher_view():
     for topic in topics:
         df = load_feedback(topic)
         count = len(df)
-        st.markdown(f"### 📌 주제: {topic} ({count}건 제출됨)")
+
+        # ✅ 제목 (40px)
+        st.markdown(
+            f'<h2 style="font-size: 40px; font-family: MyFont;">📌 주제: {topic} ({count}건 제출됨)</h2>',
+            unsafe_allow_html=True
+        )
 
         if df.empty:
             st.write("❗ 아직 피드백이 없습니다.")
         else:
             df = df.sort_values(by="timestamp", ascending=True)
 
-            # ✅ CSV 다운로드 버튼
+            # ⬇️ CSV 다운로드 버튼
             csv = df.to_csv(index=False).encode("utf-8-sig")
             st.download_button(
                 label="⬇️ CSV 다운로드",
@@ -150,15 +150,16 @@ def teacher_view():
             )
 
             for _, row in df.iterrows():
-                st.markdown(f"**[{row['timestamp']}]** {row['feedback']}")
-
+                # ✅ 본문 (30px)
+                st.markdown(
+                    f'<p style="font-size: 30px; font-family: MyFont;">[{row["timestamp"]}] {row["feedback"]}</p>',
+                    unsafe_allow_html=True
+                )
         st.markdown("---")
 
-# 🔁 진입점
 def main():
     query_params = st.query_params
 
-    # ✅ reset trigger
     if query_params.get("reset", "") == "true":
         reset_all_data()
         st.success("✅ 모든 데이터가 초기화되었습니다.")
