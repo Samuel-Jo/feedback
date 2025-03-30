@@ -83,6 +83,12 @@ button[kind="download"] {
 button[kind="download"]:hover {
     background-color: #1668b3;
 }
+.mobile-wrap {
+    display: inline-block;
+    word-break: keep-all;
+    white-space: normal;
+    text-align: left;
+}
 
 /* 반응형 설정 */
 @media screen and (max-width: 768px) {
