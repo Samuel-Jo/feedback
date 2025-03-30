@@ -80,7 +80,7 @@ def student_view():
         return
 
     st.markdown(
-        f'<h1 style="font-size: 34px; font-family: MyFont;">📥 [{topic}] 피드백 제출</h1>',
+        f'<h1 style="font-size: 30px; font-family: MyFont;">📥 [{topic}] 피드백 제출</h1>',
         unsafe_allow_html=True
     )
 
@@ -98,7 +98,7 @@ def teacher_view():
     apply_custom_css()
     st_autorefresh(interval=5000, key="refresh")
 
-    st.markdown('<h1 style="font-size: 34px; font-family: MyFont;">📋 주제별 피드백 보기</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 style="font-size: 30px; font-family: MyFont;">📋 주제별 피드백 보기</h1>', unsafe_allow_html=True)
 
     st.sidebar.subheader("📝 새 주제 추가")
     new_topic = st.sidebar.text_input("새 주제를 입력하세요")
@@ -129,9 +129,9 @@ def teacher_view():
         df = load_feedback(topic)
         count = len(df)
 
-        # ✅ 제목 (34px)
+        # ✅ 제목 (30px)
         st.markdown(
-            f'<h2 style="font-size: 34px; font-family: MyFont;">📌 주제: {topic} ({count}건 제출됨)</h2>',
+            f'<h2 style="font-size: 30px; font-family: MyFont;">📌 주제: {topic} ({count}건 제출됨)</h2>',
             unsafe_allow_html=True
         )
 
