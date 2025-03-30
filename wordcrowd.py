@@ -48,6 +48,27 @@ def apply_custom_css():
         .section-title {{
             margin-left: -100px !important;
         }}
+
+        .feedback-card {{
+            background-color: #e0e0e0 !important;  /* 중립 회색 */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+        }}
+
+        .feedback-card-positive {{
+            background-color: #ffe6ea !important;  /* 긍정 핑크 */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+        }}
+
+        .feedback-card-negative {{
+            background-color: #e0f0ff !important;  /* 부정 연한 하늘색 */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+        }}
         """
 
     st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
