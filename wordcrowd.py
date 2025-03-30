@@ -141,9 +141,17 @@ def teacher_view():
         st.markdown("<h2 class='sidebar-section'>📸 주제별 QR 코드</h2>", unsafe_allow_html=True)
         for topic in topics:
             student_url = f"{base_url}/?mode=student&topic={topic}"
-            qr = qrcode.make(student_url)
+            qr = qrcode.QRCode(
+                version=1,
+                box_size=10,
+                border=4
+            )
+            qr.add_data(student_url)
+            qr.make(fit=True)
+            img = qr.make_image(fill="black", back_color="white")
+
             buffered = BytesIO()
-            qr.save(buffered, format="PNG")
+            img.save(buffered, format="PNG")
             st.markdown(f"**📌 {topic}**")
             st.image(buffered.getvalue(), caption=student_url, use_container_width=True)
             st.markdown("<hr>", unsafe_allow_html=True)
