@@ -33,6 +33,17 @@ def apply_custom_css():
             font-family: "MyFont";
             src: url(data:font/ttf;base64,{font_encoded}) format("truetype");
         }}
+
+        section[data-testid="stSidebar"] {{
+            min-width: 400px !important;
+            max-width: 450px !important;
+        }}
+
+        .sidebar-section img {{
+            width: 100% !important;
+            max-width: 360px !important;
+            margin-bottom: 10px;
+        }}
         """
 
     st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
@@ -143,7 +154,7 @@ def teacher_view():
             student_url = f"{base_url}/?mode=student&topic={topic}"
             qr = qrcode.QRCode(
                 version=1,
-                box_size=10,
+                box_size=15,
                 border=4
             )
             qr.add_data(student_url)
