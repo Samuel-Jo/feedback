@@ -44,6 +44,10 @@ def apply_custom_css():
             max-width: 360px !important;
             margin-bottom: 10px;
         }}
+
+        .section-title {{
+            margin-left: -100px !important;
+        }}
         """
 
     st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
