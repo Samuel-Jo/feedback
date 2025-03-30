@@ -6,6 +6,7 @@ import os
 import base64
 from datetime import datetime
 from streamlit_autorefresh import st_autorefresh
+from textblob import TextBlob
 
 TOPICS_FILE = "topics.txt"
 
@@ -94,6 +95,16 @@ def student_view():
             else:
                 st.error("50자 이내로 작성해주세요.")
 
+def get_sentiment_class(text):
+    blob = TextBlob(text)
+    polarity = blob.sentiment.polarity
+    if polarity > 0.1:
+        return "feedback-card-positive"
+    elif polarity < -0.1:
+        return "feedback-card-negative"
+    else:
+        return "feedback-card"
+
 def teacher_view():
     apply_custom_css()
     st_autorefresh(interval=5000, key="refresh")
@@ -148,9 +159,13 @@ def teacher_view():
                 mime="text/csv"
             )
 
-            for _, row in df.iterrows():
+            for i, row in enumerate(df.itertuples(), 1):
+                sentiment_class = get_sentiment_class(row.feedback)
                 st.markdown(
-                    f'<p class="feedback-entry">[{row["timestamp"]}] {row["feedback"]}</p>',
+                    f'''<div class="{sentiment_class}">
+                        <strong>{i}.</strong><br>
+                        {row.feedback}
+                    </div>''',
                     unsafe_allow_html=True
                 )
         st.markdown("<hr>", unsafe_allow_html=True)
