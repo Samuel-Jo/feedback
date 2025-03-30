@@ -192,10 +192,7 @@ def teacher_view():
             for i, row in enumerate(df.itertuples(), 1):
                 sentiment_class = get_sentiment_class(row.feedback)
                 st.markdown(
-                    f'''<div class="{sentiment_class}">
-                        <strong>{i}.</strong><br>
-                        {row.feedback}
-                    </div>''',
+                    f'''<div class="{sentiment_class}"><strong>{i}.</strong> {row.feedback}</div>''',
                     unsafe_allow_html=True
                 )
         st.markdown("<hr>", unsafe_allow_html=True)
