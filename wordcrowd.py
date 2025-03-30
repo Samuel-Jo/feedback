@@ -63,7 +63,7 @@ def save_feedback(topic, feedback):
         existing = pd.read_csv(filename)
         df = pd.concat([existing, df], ignore_index=True)
     df.to_csv(filename, index=False)
-    st.info(f"✅ 저장 완료: {filename}")  # 확인용 로그 출력
+    # st.info(f"✅ 저장 완료: {filename}")  # 확인용 로그 출력 (학생 화면에서 제거)
 
 def load_feedback(topic):
     filename = get_feedback_file(topic)
@@ -93,7 +93,7 @@ def student_view():
             if feedback and len(feedback) <= 50:
                 save_feedback(topic, feedback)
                 st.success("제출되었습니다!")
-                st.info(f"📦 DEBUG: topic={topic}, feedback={feedback}")
+                # st.info(f"📦 DEBUG: topic={topic}, feedback={feedback}")  # 학생 화면에서 숨김
             else:
                 st.error("50자 이내로 작성해주세요.")
 
@@ -109,9 +109,7 @@ def get_sentiment_class(text):
 
 def teacher_view():
     apply_custom_css()
-    if "autorefresh_set" not in st.session_state:
-        st_autorefresh(interval=5000, key="refresh")
-        st.session_state.autorefresh_set = True
+    st_autorefresh(interval=5000, limit=None, key="refresh")
 
     st.markdown('<h1 class="section-title">📋 주제별 피드백 보기</h1>', unsafe_allow_html=True)
 
