@@ -144,7 +144,7 @@ def main():
         topic = normalize_topic(topic)
 
     if mode == "student" and topic:
-        st.title(f"📥 [{topic}] 피드백 제출")
+        st.markdown(f"<h3>📥 [{topic}] 피드백 제출</h3>", unsafe_allow_html=True)
         st.write("50자 이내로 피드백을 입력해주세요")
         feedback = st.text_input("")
         if st.button("제출"):
