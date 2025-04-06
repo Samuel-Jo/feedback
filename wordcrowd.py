@@ -181,7 +181,7 @@ def main():
 
             st.markdown("## 📸 주제별 QR 코드")
             for t in load_topics():
-                if not t or len(t) < 2:
+                if not t:
                     continue
                 st.markdown(f"📌 {t}")
                 encoded_topic = urllib.parse.quote(t)
@@ -195,7 +195,7 @@ def main():
             st.info("아직 등록된 주제가 없습니다.")
         else:
             for t in topics:
-                if not t or len(t) < 2:
+                if not t:
                     continue
                 df = load_feedback(t)
                 st.subheader(f"📌 주제: {t} ({len(df)}건 제출됨)")
