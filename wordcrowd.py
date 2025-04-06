@@ -79,7 +79,6 @@ def normalize_topic(topic):
     return urllib.parse.unquote(topic.strip())
 
 def get_feedback_file(topic):
-    topic = normalize_topic(topic)
     return f"feedback_{topic}.csv"
 
 def load_topics():
