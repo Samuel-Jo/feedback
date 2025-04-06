@@ -113,6 +113,16 @@ def load_feedback(topic):
     else:
         return pd.DataFrame(columns=["timestamp", "feedback"])
 
+def generate_qr_code(url):
+    qr = qrcode.QRCode(version=1, box_size=10, border=2)
+    qr.add_data(url)
+    qr.make(fit=True)
+    img = qr.make_image(fill_color="black", back_color="white")
+    buf = BytesIO()
+    img.save(buf)
+    buf.seek(0)
+    return buf
+
 def main():
     apply_custom_css()
 
@@ -131,6 +141,22 @@ def main():
     else:
         st.title("📋 주제별 피드백 보기")
         st_autorefresh(interval=5000, key="refresh")
+
+        with st.sidebar:
+            st.header("📝 새 주제 추가")
+            new_topic = st.text_input("새 주제를 입력하세요")
+            if st.button("주제 추가"):
+                if new_topic.strip():
+                    add_topic(new_topic.strip())
+                    st.success(f"주제 '{new_topic}'가 추가되었습니다.")
+
+            st.markdown("## 📸 주제별 QR 코드")
+            for t in load_topics():
+                st.markdown(f"📌 {t}")
+                qr_url = f"{get_base_url()}?mode=student&topic={t}"
+                buf = generate_qr_code(qr_url)
+                st.image(buf)
+                st.caption(f"[{qr_url}]( {qr_url})")
 
         topics = load_topics()
         if not topics:
