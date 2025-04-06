@@ -131,7 +131,13 @@ def main():
     # URL 쿼리에서 reset 여부 확인
     query_params_raw = st.query_params
     if isinstance(query_params_raw, dict):
-        if 'reset' in query_params_raw and query_params_raw['reset'] == 'true':
+        if 'reset' in query_params_raw and query_params_raw['reset'][0] == 'true':
+        import time
+        reset_all_data()
+        st.success("모든 데이터가 초기화되었습니다. 홈으로 이동합니다...")
+        time.sleep(2)
+        st.experimental_set_query_params()  # reset 제거
+        st.rerun()
             reset_all_data()
             st.success("모든 데이터가 초기화되었습니다. 새로 시작할 준비가 되었습니다!")
             return
