@@ -101,10 +101,13 @@ def add_topic(topic):
 
 def save_feedback(topic, feedback):
     topic = normalize_topic(topic)
-    if not topic or len(topic) < 2:
+    if not topic:
         return
     filename = get_feedback_file(topic)
-    add_topic(topic)
+
+    # 주제가 길 경우에만 topic 목록에 추가
+    if len(topic) >= 2:
+        add_topic(topic)
 
     df = pd.DataFrame({
         "timestamp": [datetime.now().strftime("%Y-%m-%d %H:%M:%S")],
