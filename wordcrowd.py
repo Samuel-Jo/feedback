@@ -169,6 +169,16 @@ def main():
             for t in topics:
                 df = load_feedback(t)
                 st.subheader(f"📌 주제: {t} ({len(df)}건 제출됨)")
+
+                # ✅ CSV 다운로드 버튼 추가
+                csv = df.to_csv(index=False).encode("utf-8-sig")
+                st.download_button(
+                    label="⬇️ CSV 다운로드",
+                    data=csv,
+                    file_name=f"feedback_{t}.csv",
+                    mime="text/csv"
+                )
+
                 if df.empty:
                     st.warning("❗ 아직 피드백이 없습니다.")
                 else:
