@@ -75,7 +75,7 @@ def apply_custom_css():
     st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
 def get_feedback_file(topic):
-    topic = topic.strip()
+    topic = urllib.parse.unquote(topic.strip())
     return f"feedback_{topic}.csv"
 
 def load_topics():
@@ -85,7 +85,7 @@ def load_topics():
     return []
 
 def add_topic(topic):
-    topic = topic.strip()
+    topic = urllib.parse.unquote(topic.strip())
     topics = load_topics()
     if topic and topic not in topics:
         topics.append(topic)
@@ -94,7 +94,7 @@ def add_topic(topic):
                 f.write(f"{t}\n")
 
 def save_feedback(topic, feedback):
-    topic = topic.strip()
+    topic = urllib.parse.unquote(topic.strip())
     add_topic(topic)
     filename = get_feedback_file(topic)
     df = pd.DataFrame({
@@ -107,7 +107,7 @@ def save_feedback(topic, feedback):
     df.to_csv(filename, index=False)
 
 def load_feedback(topic):
-    topic = topic.strip()
+    topic = urllib.parse.unquote(topic.strip())
     filename = get_feedback_file(topic)
     if os.path.exists(filename):
         return pd.read_csv(filename)
@@ -127,11 +127,13 @@ def generate_qr_code(url):
 def main():
     apply_custom_css()
 
-    query_params = st.query_params if hasattr(st, 'query_params') else st.experimental_get_query_params()
+    query_params = st.experimental_get_query_params()
     mode = query_params.get("mode", ["teacher"])[0]
     topic = query_params.get("topic", [None])[0]
+    if topic:
+        topic = urllib.parse.unquote(topic)
 
-    if mode == "student":
+    if mode == "student" and topic:
         st.title(f"📥 [{topic}] 피드백 제출")
         st.write("50자 이내로 피드백을 입력해주세요")
         feedback = st.text_input("")
