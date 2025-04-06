@@ -8,6 +8,7 @@ from datetime import datetime
 from streamlit_autorefresh import st_autorefresh
 from textblob import TextBlob
 from sentiment_words import positive_words, negative_words
+from urllib.parse import quote  # ✅ 추가된 부분
 
 TOPICS_FILE = "topics.txt"
 
@@ -23,32 +24,40 @@ def reset_all_data():
 
 def apply_custom_css():
     css = ""
-    with open("style.css") as f:
-        css += f.read()
+    try:
+        with open("style.css") as f:
+            css += f.read()
+    except FileNotFoundError:
+        st.warning("⚠️ style.css 파일이 누락되었습니다.")
 
-    with open("akokonut.ttf", "rb") as font_file:
-        font_encoded = base64.b64encode(font_file.read()).decode()
-        css += f"""
-        @font-face {{
-            font-family: "MyFont";
-            src: url(data:font/ttf;base64,{font_encoded}) format("truetype");
-        }}
+    try:
+        with open("akokonut.ttf", "rb") as font_file:
+            font_encoded = base64.b64encode(font_file.read()).decode()
+            css += f"""
+            @font-face {{
+                font-family: "MyFont";
+                src: url(data:font/ttf;base64,{font_encoded}) format("truetype");
+            }}
+            """
+    except FileNotFoundError:
+        st.warning("⚠️ akokonut.ttf 파일이 누락되었습니다.")
 
-        section[data-testid="stSidebar"] {{
-            min-width: 400px !important;
-            max-width: 450px !important;
-        }}
+    css += """
+    section[data-testid="stSidebar"] {
+        min-width: 400px !important;
+        max-width: 450px !important;
+    }
 
-        .sidebar-section img {{
-            width: 100% !important;
-            max-width: 360px !important;
-            margin-bottom: 10px;
-        }}
+    .sidebar-section img {
+        width: 100% !important;
+        max-width: 360px !important;
+        margin-bottom: 10px;
+    }
 
-        .section-title {{
-            margin-left: -100px !important;
-        }}
-        """
+    .section-title {
+        margin-left: -100px !important;
+    }
+    """
 
     st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
@@ -155,7 +164,8 @@ def teacher_view():
     with st.sidebar:
         st.markdown("<h2 class='sidebar-section'>📸 주제별 QR 코드</h2>", unsafe_allow_html=True)
         for topic in topics:
-            student_url = f"{base_url}/?mode=student&topic={topic}"
+            encoded_topic = quote(topic)  # ✅ 한글 안전 인코딩
+            student_url = f"{base_url}/?mode=student&topic={encoded_topic}"
             qr = qrcode.QRCode(
                 version=1,
                 box_size=15,
