@@ -8,6 +8,7 @@ from datetime import datetime
 from streamlit_autorefresh import st_autorefresh
 from textblob import TextBlob
 from sentiment_words import positive_words, negative_words
+import urllib.parse
 
 TOPICS_FILE = "topics.txt"
 
@@ -153,10 +154,11 @@ def main():
             st.markdown("## 📸 주제별 QR 코드")
             for t in load_topics():
                 st.markdown(f"📌 {t}")
-                qr_url = f"{get_base_url()}?mode=student&topic={t}"
+                encoded_topic = urllib.parse.quote(t)
+                qr_url = f"{get_base_url()}?mode=student&topic={encoded_topic}"
                 buf = generate_qr_code(qr_url)
                 st.image(buf)
-                st.caption(f"[{qr_url}]( {qr_url})")
+                st.caption(f"[{qr_url}]({qr_url})")
 
         topics = load_topics()
         if not topics:
