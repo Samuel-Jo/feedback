@@ -112,3 +112,45 @@ def load_feedback(topic):
         return pd.read_csv(filename)
     else:
         return pd.DataFrame(columns=["timestamp", "feedback"])
+
+def main():
+    apply_custom_css()
+
+    query_params = st.query_params if hasattr(st, 'query_params') else st.experimental_get_query_params()
+    mode = query_params.get("mode", ["teacher"])[0]
+    topic = query_params.get("topic", [None])[0]
+
+    if mode == "student":
+        st.title(f"📥 [{topic}] 피드백 제출")
+        st.write("50자 이내로 피드백을 입력해주세요")
+        feedback = st.text_input("")
+        if st.button("제출"):
+            if feedback.strip():
+                save_feedback(topic, feedback)
+                st.success("제출되었습니다!")
+    else:
+        st.title("📋 주제별 피드백 보기")
+        st_autorefresh(interval=5000, key="refresh")
+
+        topics = load_topics()
+        if not topics:
+            st.info("아직 등록된 주제가 없습니다.")
+        else:
+            for t in topics:
+                df = load_feedback(t)
+                st.subheader(f"📌 주제: {t} ({len(df)}건 제출됨)")
+                if df.empty:
+                    st.warning("❗ 아직 피드백이 없습니다.")
+                else:
+                    for i, row in df.iterrows():
+                        sentiment_class = "feedback-card"
+                        txt = row["feedback"]
+                        if any(word in txt for word in positive_words):
+                            sentiment_class = "feedback-card-positive"
+                        elif any(word in txt for word in negative_words):
+                            sentiment_class = "feedback-card-negative"
+
+                        st.markdown(f"<div class='{sentiment_class}'><strong>{i+1}.</strong> {txt}</div>", unsafe_allow_html=True)
+
+if __name__ == "__main__":
+    main()
