@@ -98,7 +98,9 @@ button[kind="download"]:hover {
     }
 
     .section-title {
-        font-size: 16px; /* 👈 기존 26px → 16px로 줄임 */
+        font-size: 16px !important;  /* ✅ 폰트 크기 확실히 줄이기 */
+        line-height: 1.2 !important;
+        white-space: normal !important;
     }
 
     .topic-header {
@@ -120,4 +122,6 @@ button[kind="download"]:hover {
         font-size: 16px;
         padding: 8px 16px;
     }
+}
+
 }
