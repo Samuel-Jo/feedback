@@ -129,7 +129,7 @@ def generate_qr_code(url):
     return buf
 
 def main():
-    query_params = st.query_params
+    query_params = st.experimental_get_query_params()
     reset_flag = query_params.get("reset", ["false"])[0]
     if reset_flag == "true":
         reset_all_data()
