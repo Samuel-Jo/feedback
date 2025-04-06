@@ -85,7 +85,7 @@ def get_feedback_file(topic):
 def load_topics():
     if os.path.exists(TOPICS_FILE):
         with open(TOPICS_FILE, 'r', encoding='utf-8') as f:
-            return [line.strip() for line in f.readlines() if line.strip()]
+            return list(dict.fromkeys([line.strip() for line in f.readlines() if line.strip()]))  # 중복 제거
     return []
 
 def add_topic(topic):
@@ -135,7 +135,7 @@ def main():
         reset_all_data()
         st.success("모든 데이터가 초기화되었습니다. 홈으로 이동합니다...")
         time.sleep(2)
-        st.rerun()
+        st.switch_page("/")
 
     apply_custom_css()
 
