@@ -51,21 +51,21 @@ def apply_custom_css():
         }}
 
         .feedback-card {{
-            background-color: #e0e0e0 !important;  /* 중립 회색 */
+            background-color: #e0e0e0 !important;
             padding: 1rem;
             border-radius: 0.5rem;
             margin-bottom: 0.5rem;
         }}
 
         .feedback-card-positive {{
-            background-color: #ffe6ea !important;  /* 긍정 핑크 */
+            background-color: #ffe6ea !important;
             padding: 1rem;
             border-radius: 0.5rem;
             margin-bottom: 0.5rem;
         }}
 
         .feedback-card-negative {{
-            background-color: #e0f0ff !important;  /* 부정 연한 하늘색 */
+            background-color: #e0f0ff !important;
             padding: 1rem;
             border-radius: 0.5rem;
             margin-bottom: 0.5rem;
@@ -74,8 +74,11 @@ def apply_custom_css():
 
     st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
+def normalize_topic(topic):
+    return urllib.parse.unquote(topic.strip())
+
 def get_feedback_file(topic):
-    topic = urllib.parse.unquote(topic.strip())
+    topic = normalize_topic(topic)
     return f"feedback_{topic}.csv"
 
 def load_topics():
@@ -85,7 +88,7 @@ def load_topics():
     return []
 
 def add_topic(topic):
-    topic = urllib.parse.unquote(topic.strip())
+    topic = normalize_topic(topic)
     topics = load_topics()
     if topic and topic not in topics:
         topics.append(topic)
@@ -94,7 +97,7 @@ def add_topic(topic):
                 f.write(f"{t}\n")
 
 def save_feedback(topic, feedback):
-    topic = urllib.parse.unquote(topic.strip())
+    topic = normalize_topic(topic)
     add_topic(topic)
     filename = get_feedback_file(topic)
     df = pd.DataFrame({
@@ -107,7 +110,7 @@ def save_feedback(topic, feedback):
     df.to_csv(filename, index=False)
 
 def load_feedback(topic):
-    topic = urllib.parse.unquote(topic.strip())
+    topic = normalize_topic(topic)
     filename = get_feedback_file(topic)
     if os.path.exists(filename):
         return pd.read_csv(filename)
@@ -131,7 +134,7 @@ def main():
     mode = query_params.get("mode", "teacher")
     topic = query_params.get("topic")
     if topic:
-        topic = urllib.parse.unquote(topic)
+        topic = normalize_topic(topic)
 
     if mode == "student" and topic:
         st.title(f"📥 [{topic}] 피드백 제출")
@@ -170,7 +173,6 @@ def main():
                 df = load_feedback(t)
                 st.subheader(f"📌 주제: {t} ({len(df)}건 제출됨)")
 
-                # ✅ CSV 다운로드 버튼 추가
                 csv = df.to_csv(index=False).encode("utf-8-sig")
                 st.download_button(
                     label="⬇️ CSV 다운로드",
