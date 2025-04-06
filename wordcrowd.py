@@ -134,7 +134,7 @@ def main():
         reset_all_data()
         st.success("모든 데이터가 초기화되었습니다. 홈으로 이동합니다...")
         time.sleep(2)
-        st.experimental_set_query_params()
+        st.experimental_set_query_params(**{})
         st.rerun()
 
     apply_custom_css()
