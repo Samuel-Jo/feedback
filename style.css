@@ -83,6 +83,7 @@ button[kind="download"] {
 button[kind="download"]:hover {
     background-color: #1668b3;
 }
+
 .mobile-wrap {
     display: inline-block;
     word-break: keep-all;
@@ -90,14 +91,14 @@ button[kind="download"]:hover {
     text-align: left;
 }
 
-/* 반응형 설정 */
+/* ✅ 반응형 설정 (모바일 화면에서 폰트 크기 축소) */
 @media screen and (max-width: 768px) {
     html, body, [class*="css"] {
         font-size: 20px;
     }
 
     .section-title {
-        font-size: 26px;
+        font-size: 16px; /* 👈 기존 26px → 16px로 줄임 */
     }
 
     .topic-header {
