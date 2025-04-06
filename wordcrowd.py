@@ -129,19 +129,19 @@ def generate_qr_code(url):
     return buf
 
 def main():
-    reset_flag = st.query_params.get("reset", "false")
+    query_params = st.experimental_get_query_params()
+    reset_flag = query_params.get("reset", ["false"])[0]
     if reset_flag == "true":
         reset_all_data()
         st.success("모든 데이터가 초기화되었습니다. 홈으로 이동합니다...")
         time.sleep(2)
-        st.experimental_set_query_params(**{})
+        st.experimental_set_query_params()
         st.rerun()
 
     apply_custom_css()
 
-    query_params = st.query_params
-    mode = query_params.get("mode", "teacher")
-    topic = query_params.get("topic")
+    mode = query_params.get("mode", ["teacher"])[0]
+    topic = query_params.get("topic", [None])[0]
     if topic:
         topic = normalize_topic(topic)
 
