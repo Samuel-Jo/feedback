@@ -85,13 +85,15 @@ def get_feedback_file(topic):
 def load_topics():
     if os.path.exists(TOPICS_FILE):
         with open(TOPICS_FILE, 'r', encoding='utf-8') as f:
-            return list(dict.fromkeys([line.strip() for line in f.readlines() if line.strip()]))  # 중복 제거
+            return list(dict.fromkeys([line.strip() for line in f.readlines() if line.strip()]))
     return []
 
 def add_topic(topic):
     topic = normalize_topic(topic)
+    if not topic or len(topic) < 2:
+        return
     topics = load_topics()
-    if topic and topic not in topics:
+    if topic not in topics:
         topics.append(topic)
         with open(TOPICS_FILE, 'w', encoding='utf-8') as f:
             for t in topics:
@@ -99,9 +101,9 @@ def add_topic(topic):
 
 def save_feedback(topic, feedback):
     topic = normalize_topic(topic)
+    if not topic or len(topic) < 2:
+        return
     filename = get_feedback_file(topic)
-
-    # 🔽 자동으로 주제를 추가
     add_topic(topic)
 
     df = pd.DataFrame({
@@ -176,6 +178,8 @@ def main():
 
             st.markdown("## 📸 주제별 QR 코드")
             for t in load_topics():
+                if not t or len(t) < 2:
+                    continue
                 st.markdown(f"📌 {t}")
                 encoded_topic = urllib.parse.quote(t)
                 qr_url = f"{get_base_url()}?mode=student&topic={encoded_topic}"
@@ -188,6 +192,8 @@ def main():
             st.info("아직 등록된 주제가 없습니다.")
         else:
             for t in topics:
+                if not t or len(t) < 2:
+                    continue
                 df = load_feedback(t)
                 st.subheader(f"📌 주제: {t} ({len(df)}건 제출됨)")
 
