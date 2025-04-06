@@ -100,6 +100,10 @@ def add_topic(topic):
 def save_feedback(topic, feedback):
     topic = normalize_topic(topic)
     filename = get_feedback_file(topic)
+
+    # 🔽 자동으로 주제를 추가
+    add_topic(topic)
+
     df = pd.DataFrame({
         "timestamp": [datetime.now().strftime("%Y-%m-%d %H:%M:%S")],
         "feedback": [feedback]
