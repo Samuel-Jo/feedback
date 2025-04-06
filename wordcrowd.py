@@ -127,9 +127,9 @@ def generate_qr_code(url):
 def main():
     apply_custom_css()
 
-    query_params = st.experimental_get_query_params()
-    mode = query_params.get("mode", ["teacher"])[0]
-    topic = query_params.get("topic", [None])[0]
+    query_params = st.query_params
+    mode = query_params.get("mode", "teacher")
+    topic = query_params.get("topic")
     if topic:
         topic = urllib.parse.unquote(topic)
 
