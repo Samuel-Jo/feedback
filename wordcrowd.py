@@ -139,7 +139,11 @@ def main():
 
     apply_custom_css()
 
-    mode = query_params.get("mode", ["teacher"])[0].lower()
+    mode = query_params.get("mode", ["teacher"])
+    if isinstance(mode, list):
+        mode = mode[0].lower()
+    else:
+        mode = str(mode).lower()
     topic = query_params.get("topic", [None])[0]
     if topic:
         topic = normalize_topic(topic)
