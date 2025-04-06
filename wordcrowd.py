@@ -85,7 +85,7 @@ def get_feedback_file(topic):
 def load_topics():
     if os.path.exists(TOPICS_FILE):
         with open(TOPICS_FILE, 'r', encoding='utf-8') as f:
-            return [line.strip() for line in f.readlines()]
+            return [line.strip() for line in f.readlines() if line.strip()]
     return []
 
 def add_topic(topic):
@@ -129,7 +129,7 @@ def generate_qr_code(url):
     return buf
 
 def main():
-    query_params = query_params = st.query_params
+    query_params = st.query_params
     reset_flag = query_params.get("reset", ["false"])[0]
     if reset_flag == "true":
         reset_all_data()
@@ -139,12 +139,15 @@ def main():
 
     apply_custom_css()
 
-    mode = query_params.get("mode", ["teacher"])[0]
+    mode = query_params.get("mode", ["teacher"])[0].lower()
     topic = query_params.get("topic", [None])[0]
     if topic:
         topic = normalize_topic(topic)
 
-    if mode == "student" and topic:
+    if mode == "student":
+        if not topic:
+            st.error("QR 코드 링크에 문제가 있습니다. 주제가 지정되지 않았습니다.")
+            return
         st.markdown(f"<h3 style='font-size: 1.2rem;'>📥 [{topic}] 피드백 제출</h3>", unsafe_allow_html=True)
         st.write("50자 이내로 피드백을 입력해주세요")
         feedback = st.text_input("")
