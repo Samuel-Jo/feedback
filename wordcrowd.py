@@ -9,6 +9,7 @@ from streamlit_autorefresh import st_autorefresh
 from textblob import TextBlob
 from sentiment_words import positive_words, negative_words
 import urllib.parse
+import time
 
 TOPICS_FILE = "topics.txt"
 
@@ -128,19 +129,16 @@ def generate_qr_code(url):
     return buf
 
 def main():
-    # URL 쿼리에서 reset 여부 확인
     query_params_raw = st.query_params
     if isinstance(query_params_raw, dict):
         if 'reset' in query_params_raw and query_params_raw['reset'][0] == 'true':
-        import time
-        reset_all_data()
-        st.success("모든 데이터가 초기화되었습니다. 홈으로 이동합니다...")
-        time.sleep(2)
-        st.experimental_set_query_params()  # reset 제거
-        st.rerun()
+            import time
             reset_all_data()
-            st.success("모든 데이터가 초기화되었습니다. 새로 시작할 준비가 되었습니다!")
-            return
+            st.success("모든 데이터가 초기화되었습니다. 홈으로 이동합니다...")
+            time.sleep(2)
+            st.experimental_set_query_params()
+            st.rerun()
+
     apply_custom_css()
 
     query_params = st.query_params
@@ -150,7 +148,7 @@ def main():
         topic = normalize_topic(topic)
 
     if mode == "student" and topic:
-        st.markdown(f"<h3>📥 [{topic}] 피드백 제출</h3>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='font-size: 1.2rem;'>📥 [{topic}] 피드백 제출</h3>", unsafe_allow_html=True)
         st.write("50자 이내로 피드백을 입력해주세요")
         feedback = st.text_input("")
         if st.button("제출"):
@@ -205,7 +203,7 @@ def main():
                         elif any(word in txt for word in negative_words):
                             sentiment_class = "feedback-card-negative"
 
-                        st.markdown(f"<div class='{sentiment_class}'><strong>{i+1}.</strong> {txt}</div>", unsafe_allow_html=True)
+                        st.markdown(f"<div class='{sentiment_class}'><strong>{i+1}. </strong>{txt}</div>", unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
