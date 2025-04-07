@@ -1,84 +1,83 @@
-/* 전체 기본 설정 */
+/* ========= 기본 설정 ========= */
 html, body, [class*="css"] {
     font-family: "MyFont", sans-serif;
     font-size: 24px;
-    color: #333;
+    color: #2C2C2C;
     line-height: 1.5;
     margin: 0;
     padding: 0;
+    background-color: #FAFAFA;
 }
 
-/* 대제목 */
+/* ========= 제목 스타일 ========= */
 .section-title {
-    font-size: 32px;
-    font-weight: bold;
-    margin: 20px 0 15px 0;
-    line-height: 1.2;
-    word-break: keep-all;
-    white-space: nowrap;
+    font-size: 28px;
+    font-weight: 700;
+    margin: 30px 0 20px;
+    color: #3F51B5;
 }
 
-/* 주제별 소제목 */
 .topic-header {
-    font-size: 32px !important;
-    font-weight: bold;
-    margin: 30px 0 10px 0;
-    line-height: 1.2;
-    word-break: keep-all;
-    white-space: nowrap;
+    font-size: 20px !important;
+    color: #2C2C2C;
+    font-weight: 600;
+    border-bottom: 1px solid #E0E0E0;
+    padding-bottom: 8px;
+    margin-top: 40px;
+    margin-bottom: 24px;
 }
 
-/* 사이드바 제목 */
 .sidebar-section {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bold;
+    color: #3F51B5;
     margin-top: 20px;
     margin-bottom: 10px;
-    line-height: 1.2;
-    word-break: keep-all;
-    white-space: nowrap;
 }
 
-/* 공통 카드 스타일 */
-/* 피드백 카드 텍스트만 확대 (번호 포함) */
-.feedback-card strong,
-.feedback-card span,
+/* ========= 피드백 카드 ========= */
 .feedback-card,
-.feedback-card-positive strong,
-.feedback-card-positive span,
 .feedback-card-positive,
-.feedback-card-negative strong,
-.feedback-card-negative span,
 .feedback-card-negative {
-    font-size: 30px !important;
-    line-height: 1.6;
+    background: #fff;
+    border: 1px solid #E0E0E0;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    font-size: 28px;
+    transition: box-shadow 0.2s ease;
 }
 
-
-/* 중립 카드 */
-.feedback-card {
-    background-color: #f4f4f4;
-    border-left: 6px solid #999;
+.feedback-card:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
-/* 긍정 카드 */
 .feedback-card-positive {
-    font-size: 30px !important;
-    color: #1a6e22; /* 긍정은 초록 계열 */
+    background-color: #E8F5E9;
+    border-left: 6px solid #4CAF50;
 }
 
-/* 부정 카드 */
 .feedback-card-negative {
-    font-size: 30px !important;
-    color: #b22222; /* 부정은 빨강 계열 */
+    background-color: #FFEBEE;
+    border-left: 6px solid #F44336;
 }
 
+.feedback-num {
+    font-weight: bold;
+    color: #3F51B5;
+    margin-right: 8px;
+}
 
-/* 다운로드 버튼 */
+.feedback-text {
+    color: #2C2C2C;
+}
+
+/* ========= 다운로드 버튼 ========= */
 button[kind="download"] {
-    font-size: 20px;
+    font-size: 18px;
     padding: 10px 20px;
-    background-color: #1E88E5;
+    background-color: #3F51B5;
     color: white;
     border: none;
     border-radius: 6px;
@@ -86,55 +85,32 @@ button[kind="download"] {
 }
 
 button[kind="download"]:hover {
-    background-color: #1668b3;
+    background-color: #303F9F;
 }
 
-.mobile-wrap {
-    display: inline-block;
-    word-break: keep-all;
-    white-space: normal;
-    text-align: left;
-}
-
-/* ✅ 반응형 설정 (모바일 화면에서 폰트 크기 축소) */
+/* ========= 모바일 반응형 ========= */
 @media screen and (max-width: 768px) {
-    .topic-header {
-        font-size: 16px !important; /* 모바일에서도 축소된 크기 유지 */
+    html, body, [class*="css"] {
+        font-size: 20px;
     }
-
-    .feedback-card,
-    .feedback-card-positive,
-    .feedback-card-negative {
-        font-size: 24px !important; /* 모바일에선 너무 크지 않게 */
-    }
-}
-
 
     .section-title {
-        font-size: 16px !important;  /* ✅ 폰트 크기 확실히 줄이기 */
-        line-height: 1.2 !important;
-        white-space: normal !important;
-    }
-
-    .topic-header {
         font-size: 22px;
     }
 
-    .sidebar-section {
-        font-size: 18px;
+    .topic-header {
+        font-size: 16px !important;
     }
 
     .feedback-card,
     .feedback-card-positive,
     .feedback-card-negative {
-        padding: 14px 16px;
-        font-size: 18px;
+        font-size: 20px !important;
+        padding: 16px 18px;
     }
 
     button[kind="download"] {
         font-size: 16px;
         padding: 8px 16px;
     }
-}
-
 }
