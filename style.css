@@ -40,18 +40,20 @@ html, body, [class*="css"] {
 }
 
 /* 공통 카드 스타일 */
-/* 피드백 카드 본문 크기 확대 */
+/* 피드백 카드 텍스트만 확대 (번호 포함) */
+.feedback-card strong,
+.feedback-card span,
 .feedback-card,
+.feedback-card-positive strong,
+.feedback-card-positive span,
 .feedback-card-positive,
+.feedback-card-negative strong,
+.feedback-card-negative span,
 .feedback-card-negative {
-    max-width: 100%;
-    box-sizing: border-box;
-    padding: 16px 20px;
-    margin-bottom: 15px;
-    border-radius: 10px;
-    box-shadow: 2px 2px 6px rgba(0,0,0,0.05);
-    font-size: 30px;  /* ✅ 1.25배 확대 */
+    font-size: 30px !important;
+    line-height: 1.6;
 }
+
 
 /* 중립 카드 */
 .feedback-card {
@@ -61,15 +63,16 @@ html, body, [class*="css"] {
 
 /* 긍정 카드 */
 .feedback-card-positive {
-    background-color: #e6f9e6;
-    border-left: 6px solid #4caf50;
+    font-size: 30px !important;
+    color: #1a6e22; /* 긍정은 초록 계열 */
 }
 
 /* 부정 카드 */
 .feedback-card-negative {
-    background-color: #ffecec;
-    border-left: 6px solid #f44336;
+    font-size: 30px !important;
+    color: #b22222; /* 부정은 빨강 계열 */
 }
+
 
 /* 다운로드 버튼 */
 button[kind="download"] {
