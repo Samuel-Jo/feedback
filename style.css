@@ -20,7 +20,7 @@ html, body, [class*="css"] {
 
 /* 주제별 소제목 */
 .topic-header {
-    font-size: 20px !important;  /* 28px → 20px로 강제 축소 */
+    font-size: 24px !important;  /* 28px → 24px로 강제 축소 */
     font-weight: bold;
     margin: 30px 0 10px 0;
     line-height: 1.2;
