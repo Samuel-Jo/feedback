@@ -40,6 +40,7 @@ html, body, [class*="css"] {
 }
 
 /* 공통 카드 스타일 */
+/* 공통 카드 스타일 */
 .feedback-card,
 .feedback-card-positive,
 .feedback-card-negative {
@@ -49,6 +50,7 @@ html, body, [class*="css"] {
     margin-bottom: 15px;
     border-radius: 10px;
     box-shadow: 2px 2px 6px rgba(0,0,0,0.05);
+    font-size: 28px; /* ✅ 글씨 크기 4px 키움 */
 }
 
 /* 중립 카드 */
@@ -93,9 +95,12 @@ button[kind="download"]:hover {
 
 /* ✅ 반응형 설정 (모바일 화면에서 폰트 크기 축소) */
 @media screen and (max-width: 768px) {
-    html, body, [class*="css"] {
-        font-size: 20px;
+    .feedback-card,
+    .feedback-card-positive,
+    .feedback-card-negative {
+        font-size: 20px !important;
     }
+}
 
     .section-title {
         font-size: 16px !important;  /* ✅ 폰트 크기 확실히 줄이기 */
