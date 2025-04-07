@@ -92,7 +92,7 @@ def student_view():
         return
 
     st.markdown(
-        f'<h1 class="section-title">📥 <span class="mobile-wrap">[{topic}]<br>피드백 제출</span></h1>',
+        f'<h3 class="section-title">📥 <span class="mobile-wrap">[{topic}]<br>피드백 제출</span></h3>',
         unsafe_allow_html=True
     )
 
@@ -126,7 +126,7 @@ def teacher_view():
     apply_custom_css()
     st_autorefresh(interval=5000, limit=None, key="refresh")
 
-    st.markdown('<h2 class="section-title">📋 주제별 피드백 보기</h2>', unsafe_allow_html=True)
+    st.markdown('<h3 class="section-title">📋 주제별 피드백 보기</h3>', unsafe_allow_html=True)
 
     with st.sidebar:
         st.markdown("<div class='sidebar-section'><h2>📝 새 주제 추가</h2></div>", unsafe_allow_html=True)
