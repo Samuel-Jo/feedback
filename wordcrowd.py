@@ -126,7 +126,7 @@ def teacher_view():
     apply_custom_css()
     st_autorefresh(interval=5000, limit=None, key="refresh")
 
-    st.markdown('<h1 class="section-title">📋 주제별 피드백 보기</h1>', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-title">📋 주제별 피드백 보기</h2>', unsafe_allow_html=True)
 
     with st.sidebar:
         st.markdown("<div class='sidebar-section'><h2>📝 새 주제 추가</h2></div>", unsafe_allow_html=True)
@@ -172,7 +172,7 @@ def teacher_view():
         count = len(df)
 
         st.markdown(
-            f'<h2 class="topic-header">📌 주제: {topic} ({count}건 제출됨)</h2>',
+            f'<h1 class="topic-header">📌 주제: {topic} ({count}건 제출됨)</h1>',
             unsafe_allow_html=True
         )
 
