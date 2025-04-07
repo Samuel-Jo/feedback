@@ -24,40 +24,26 @@ def reset_all_data():
 
 def apply_custom_css():
     css = ""
+
+    # style.css 읽기
     try:
-        with open("style.css") as f:
+        with open("style.css", "r", encoding="utf-8") as f:
             css += f.read()
     except FileNotFoundError:
         st.warning("⚠️ style.css 파일이 누락되었습니다.")
 
+    # akokonut.ttf 폰트 임베딩
     try:
         with open("akokonut.ttf", "rb") as font_file:
             font_encoded = base64.b64encode(font_file.read()).decode()
-            css += f"""
+            css = f"""
             @font-face {{
                 font-family: "MyFont";
                 src: url(data:font/ttf;base64,{font_encoded}) format("truetype");
             }}
-            """
+            """ + css
     except FileNotFoundError:
-        st.warning("⚠️ akokonut.ttf 파일이 누락되었습니다.")
-
-    css += """
-    section[data-testid="stSidebar"] {
-        min-width: 400px !important;
-        max-width: 450px !important;
-    }
-
-    .sidebar-section img {
-        width: 100% !important;
-        max-width: 360px !important;
-        margin-bottom: 10px;
-    }
-
-    .section-title {
-        margin-left: -100px !important;
-    }
-    """
+        st.warning("⚠️ akokonut.ttf 파일이 누락되었습니다. 시스템 기본 폰트가 사용됩니다.")
 
     st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
