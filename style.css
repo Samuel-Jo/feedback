@@ -20,7 +20,7 @@ html, body, [class*="css"] {
 
 /* 주제별 소제목 */
 .topic-header {
-    font-size: 28px;
+    font-size: 20px;  /* ✅ 70% 수준으로 축소 */
     font-weight: bold;
     margin: 30px 0 10px 0;
     line-height: 1.2;
@@ -40,7 +40,7 @@ html, body, [class*="css"] {
 }
 
 /* 공통 카드 스타일 */
-/* 공통 카드 스타일 */
+/* 피드백 카드 본문 크기 확대 */
 .feedback-card,
 .feedback-card-positive,
 .feedback-card-negative {
@@ -50,7 +50,7 @@ html, body, [class*="css"] {
     margin-bottom: 15px;
     border-radius: 10px;
     box-shadow: 2px 2px 6px rgba(0,0,0,0.05);
-    font-size: 28px; /* ✅ 글씨 크기 4px 키움 */
+    font-size: 30px;  /* ✅ 1.25배 확대 */
 }
 
 /* 중립 카드 */
@@ -95,12 +95,17 @@ button[kind="download"]:hover {
 
 /* ✅ 반응형 설정 (모바일 화면에서 폰트 크기 축소) */
 @media screen and (max-width: 768px) {
+    .topic-header {
+        font-size: 16px !important; /* 모바일에서도 축소된 크기 유지 */
+    }
+
     .feedback-card,
     .feedback-card-positive,
     .feedback-card-negative {
-        font-size: 20px !important;
+        font-size: 24px !important; /* 모바일에선 너무 크지 않게 */
     }
 }
+
 
     .section-title {
         font-size: 16px !important;  /* ✅ 폰트 크기 확실히 줄이기 */
